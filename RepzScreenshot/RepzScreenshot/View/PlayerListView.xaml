@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="RepzScreenshot.View.PlayerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedPlayers" Source="{Binding Players}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription  PropertyName="PlayerName" Direction="Ascending" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" MaxWidth="80"/>
+                <ColumnDefinition Width="*"  MaxWidth="80" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="first" Grid.Column="0" />
+            <Grid x:Name="second" Grid.Column="1" />
+            <Grid x:Name="third" Grid.Column="2" />
+            <Grid x:Name="fourth" Grid.Column="3" />
+            <ListView Grid.ColumnSpan="4" ItemsSource="{Binding Source={StaticResource SortedPlayers}}" HorizontalContentAlignment="Stretch">
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="{Binding StatusBrush}" />
+                    </Style>
+                    
+                </ListView.Resources>
+                <ListView.View>
+
+                    <GridView>
+
+                        <GridViewColumn Width="{Binding ElementName=first, Path=ActualWidth}" Header="Name"
+                        DisplayMemberBinding="{Binding PlayerName}"  />
+                        <GridViewColumn Width="{Binding ElementName=second, Path=ActualWidth}" Header="Score"
+                        DisplayMemberBinding="{Binding PlayerScore}"/>
+
+                        <GridViewColumn Width="{Binding ElementName=third, Path=ActualWidth}" Header="Ping"
+                        DisplayMemberBinding="{Binding PlayerPing}" />
+                        <GridViewColumn Width="auto" Header="">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Screenshot" Command="{Binding ScreenshotCommand}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                    </GridView>
+
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+    </DockPanel>
+</UserControl>

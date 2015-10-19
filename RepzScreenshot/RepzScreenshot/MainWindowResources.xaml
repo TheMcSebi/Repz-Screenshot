@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:RepzScreenshot.View"
+                    xmlns:vm="clr-namespace:RepzScreenshot.ViewModel">
+
+    <DataTemplate DataType="{x:Type vm:PlayerSearchViewModel}">
+        <DockPanel>
+            <view:ErrorView DockPanel.Dock="Top"/>
+            <view:PlayerSearchControl DockPanel.Dock="Top" />
+        </DockPanel>
+
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ServerViewModel}">
+        <DockPanel>
+            <view:ErrorView DockPanel.Dock="Top"/>
+            <view:PlayerListView />
+        </DockPanel>
+        
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ServerListViewModel}">
+        <DockPanel>
+            <view:ErrorView DockPanel.Dock="Top"/>
+            <view:ServerListView />
+        </DockPanel>
+        
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:PlayerViewModel}">
+        <DockPanel>
+            <view:ErrorView DockPanel.Dock="Top" />
+            <view:PlayerView />
+        </DockPanel>
+    </DataTemplate>
+
+    <Style TargetType="TabItem">
+        <Setter Property="Background" Value="{Binding Path=StatusBrush}" />
+    </Style>
+
+</ResourceDictionary>
