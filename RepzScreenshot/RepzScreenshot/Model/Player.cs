@@ -1,6 +1,8 @@
-﻿namespace RepzScreenshot.Model
+﻿using System;
+
+namespace RepzScreenshot.Model
 {
-    class Player : ModelBase
+    class Player : ModelBase, IEquatable<Player>
     {
 
         private int id;
@@ -95,6 +97,9 @@
 
         #endregion //properties
 
+
+        #region constructor
+
         public Player(string name, int score, int ping)
         {
             Name = name;
@@ -108,6 +113,11 @@
         {
             Id = id;
         }
+
+        #endregion //constructor
+
+
+        #region methods
 
         public override void Update(ModelBase p)
         {
@@ -123,5 +133,23 @@
         {
             return Name;
         }
+
+        #endregion //methods
+
+        #region interfaces
+
+        public bool Equals(Player p)
+        {
+            if(this.Id != 0 && p.Id != 0)
+            {
+                return (this.Id.Equals(p.Id));
+            }
+            else
+            {
+                return (this.OriginalName.Equals(p.OriginalName));
+            }
+        }
+
+        #endregion //interfaces
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepzScreenshot.Model
 {
-    class Server : ModelBase
+    class Server : ModelBase, IEquatable<Server>
     {
 
         private string hostname;
@@ -187,5 +187,16 @@ namespace RepzScreenshot.Model
             return String.Format("[{0}]{1}", Npid, Hostname);
         }
         #endregion // methods
+
+
+        #region interfaces
+
+        public bool Equals(Server s)
+        {
+            //return (this.Address.ToString().Equals(s.Address.ToString()) && this.Port.Equals(s.Port));
+            return (this.Npid.Equals(s.Npid));
+        }
+
+        #endregion //interfaces
     }
 }

@@ -157,7 +157,7 @@ namespace RepzScreenshot.ViewModel
             MainWindowViewModel.AddWorkspace(this);
             this.RequestClose += ServerViewModel_RequestClose;
             OpenCommand.NotifyCanExecuteChanged();
-            RefreshTimer.Start();
+            
         }
 
         #endregion //command methods
@@ -176,6 +176,7 @@ namespace RepzScreenshot.ViewModel
                 {
                     Players.Add(new PlayerViewModel(p));
                 }
+                RefreshTimer.Start();
             }
             catch (ExceptionBase ex)
             {
@@ -197,7 +198,7 @@ namespace RepzScreenshot.ViewModel
             IsLoading = true;
             try
             {
-                await ServerDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, ServerDataAccess.GetPlayersAsync, x => x.Player, x => x.OriginalName, Add);
+                await ServerDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, ServerDataAccess.GetPlayersAsync, x => x.Player, Add, true);
                 RefreshTimer.Start();
             }
             catch (ExceptionBase ex)
@@ -236,6 +237,7 @@ namespace RepzScreenshot.ViewModel
 
         void RefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 UpdatePlayers();

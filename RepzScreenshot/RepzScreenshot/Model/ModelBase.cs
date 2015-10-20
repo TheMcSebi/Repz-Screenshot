@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace RepzScreenshot.Model
 {
@@ -19,7 +20,6 @@ namespace RepzScreenshot.Model
 
 
         public abstract void Update(ModelBase m);
-
         
     }
 }

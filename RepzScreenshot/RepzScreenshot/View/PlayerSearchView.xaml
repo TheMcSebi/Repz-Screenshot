@@ -44,7 +44,7 @@ d:DesignHeight="300" d:DesignWidth="300">
                 <ListView.View>
 
                     <GridView>
-                        <GridViewColumn Width="auto" Header="Name" DisplayMemberBinding="{Binding PlayerName}"  />
+                        <GridViewColumn Width="500" Header="Name" DisplayMemberBinding="{Binding PlayerName}"  />
 
                         <GridViewColumn Width="auto" Header="Screenshot">
                             <GridViewColumn.CellTemplate>

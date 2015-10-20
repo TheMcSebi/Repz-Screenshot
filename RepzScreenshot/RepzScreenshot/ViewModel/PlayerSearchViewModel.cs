@@ -111,7 +111,7 @@ namespace RepzScreenshot.ViewModel
             IsLoading = true;
             try
             {
-                await RepzDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, GetData, x => x.Player, x => x.OriginalName, AddPlayer);
+                await RepzDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, GetData, x => x.Player, AddPlayer, true);
             }
             catch(ExceptionBase ex)
             {
