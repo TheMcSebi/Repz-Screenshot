@@ -19,9 +19,9 @@ namespace RepzScreenshot.DataAccess
         private static Dictionary<string, Player> PlayerCache;
 
         private WebClient client = new WebClient();
-        private static DateTime LastRequest {get;set;}
+        private static DateTime LastRequest { get; set; }
 
-        
+
 
         static RepzDataAccess()
         {
@@ -30,41 +30,40 @@ namespace RepzScreenshot.DataAccess
         }
         protected async Task<dynamic> ApiCallAsync(string url)
         {
-            
+
             if(!url.EndsWith("/"))
             {
                 url += "/";
             }
 
             TimeSpan diff = DateTime.Now - LastRequest;
-            
-            while ((diff=DateTime.Now - LastRequest) < TimeSpan.FromSeconds(API_DELAY))
+
+            while((diff = DateTime.Now - LastRequest) < TimeSpan.FromSeconds(API_DELAY))
             {
-                
+
                 TimeSpan delay = (TimeSpan.FromSeconds(API_DELAY) - diff);
-                if (delay < TimeSpan.FromMilliseconds(1))
+                if(delay < TimeSpan.FromMilliseconds(1))
                 {
                     delay = TimeSpan.FromMilliseconds(100);
                 }
                 await Task.Delay(delay);
-                
+
             }
             LastRequest = DateTime.Now;
-            
+
             string res = "";
             try
             {
-                
+
                 //set headers
                 string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 client.Headers.Set("User-Agent", "Repz Screenshot Tool/" + version + "(by tccr(352737))");
-                
+
                 res = await client.DownloadStringTaskAsync(new Uri(url));
             }
             catch(WebException ex)
             {
-                
-                //Console.WriteLine("WebException "+url+" " + ex.Message);
+
                 switch(ex.Status)
                 {
                     case WebExceptionStatus.ConnectFailure:
@@ -76,33 +75,33 @@ namespace RepzScreenshot.DataAccess
                     case WebExceptionStatus.ProtocolError:
                         throw new InvalidResponseException();
                 }
-                
+
                 throw ex;
             }
             catch(Exception ex)
             {
                 throw ex;
             }
-            
+
             finally
             {
                 LastRequest = DateTime.Now;
             }
-            
+
             try
             {
                 dynamic json = JsonConvert.DeserializeObject(res);
-            
+
                 return json;
             }
             catch(Exception)
             {
                 throw new InvalidResponseException();
             }
-            
+
         }
 
-        
+
         public async Task GetIdAsync(Player player)
         {
             try
@@ -131,7 +130,7 @@ namespace RepzScreenshot.DataAccess
             {
                 throw new UserOfflineException(p);
             }
-            
+
         }
 
         public async Task<List<Player>> FindPlayers(string name)
@@ -140,9 +139,9 @@ namespace RepzScreenshot.DataAccess
             try
             {
                 dynamic json = await ApiCallAsync(API_BASE + "username/" + name);
-                if (json.result != null)
+                if(json.result != null)
                 {
-                    foreach (dynamic player in json.result)
+                    foreach(dynamic player in json.result)
                     {
                         int id = player.user_id;
                         string username = player.username;
@@ -154,14 +153,14 @@ namespace RepzScreenshot.DataAccess
                             p = new Player(id, username);
                             PlayerCache.Add(username, p);
                         }
-                        
+
                         players.Add(p);
                     }
                 }
 
                 return players;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw ex;
             }
@@ -178,12 +177,12 @@ namespace RepzScreenshot.DataAccess
             try
             {
                 List<Player> players = await FindPlayers(name);
-            
+
                 if(players.Count == 0)
                 {
                     throw new UserNotFoundException();
                 }
-                else if (players.Count == 1)
+                else if(players.Count == 1)
                 {
                     return players[0];
                 }
@@ -191,22 +190,22 @@ namespace RepzScreenshot.DataAccess
                 //check for exact match
                 foreach(Player p in players)
                 {
-                    if (p.Name == name)
+                    if(p.Name == name)
                         return p;
 
                 }
 
                 //find player beginning with name
-                foreach (Player p in players)
+                foreach(Player p in players)
                 {
-                    if (p.Name.StartsWith(name))
+                    if(p.Name.StartsWith(name))
                         return p;
                 }
 
                 //return first in the list
                 return players[0];
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw ex;
             }
@@ -215,13 +214,13 @@ namespace RepzScreenshot.DataAccess
         public async Task<BitmapImage> GetScreenshotAsync(Player player)
         {
             bool done = false;
-            for(int tries=0;tries<20 && !done; ++tries)
+            for(int tries = 0; tries < 20 && !done; ++tries)
             {
                 try
                 {
                     dynamic json = await ApiCallAsync(API_BASE + "screenshot/" + player.Id);
 
-                    if (json.status == 200 && json.result != "Waiting for answer.")
+                    if(json.status == 200 && json.result != "Waiting for answer.")
                     {
                         string img = json.result;
                         Byte[] bitmapData = new Byte[img.Length];
@@ -233,15 +232,15 @@ namespace RepzScreenshot.DataAccess
                         bitImage.EndInit();
 
                         return bitImage;
-                        
+
                     }
                     else if(json.result == "Offline")
                     {
                         throw new UserOfflineException(player);
                     }
-                    else if ((json.status == 200 && json.result == "Waiting for answer.") || (json.status == 204 && json.result == "Request sent."))
+                    else if((json.status == 200 && json.result == "Waiting for answer.") || (json.status == 204 && json.result == "Request sent."))
                     {
-                        
+
                         await Task.Delay(2000);
                     }
                     else
@@ -256,10 +255,10 @@ namespace RepzScreenshot.DataAccess
                 }
             }
 
-            
+
             //unable to get screenshot
             throw new ScreenshotException("Unable to get Screenshot");
-            
+
 
         }
 
@@ -269,7 +268,7 @@ namespace RepzScreenshot.DataAccess
             {
                 dynamic json = await ApiCallAsync(API_BASE + "findSessions/61586/1/");
                 List<Server> servers = new List<Server>();
-                foreach (dynamic server in json)
+                foreach(dynamic server in json)
                 {
                     string hostname = server.Info.hostname;
                     IPAddress address = IPAddress.Parse(server.session.address.ToString());
@@ -282,7 +281,7 @@ namespace RepzScreenshot.DataAccess
                     int npid = server.session.npid;
 
                     Server s = new Server(hostname, address, port, npid, clients, maxclients, map, gametype);
-                        
+
                     servers.Add(s);
                 }
 

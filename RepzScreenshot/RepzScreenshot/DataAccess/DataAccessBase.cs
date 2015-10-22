@@ -16,40 +16,46 @@ namespace RepzScreenshot.DataAccess
             where T : ViewModelBase
             where U : ModelBase, IEquatable<U>
         {
-
-            List<U> newItems = await newData();
-            List<U> currentItems = collection.Select(x => instance(x)).ToList();
-            List<U> toRemove = new List<U>();
-            List<U> toAdd = newItems.Where(x => !currentItems.Any(y => x.Equals(y))).ToList();
-            List<T> toUpdate = collection.Where(x => newItems.Any(y => y.Equals(instance(x)))).ToList();
-
-
-            if (remove)
+            try
             {
-                toRemove = currentItems.Where(x => !newItems.Any(y => x.Equals(y))).ToList();
-            }
-            
+                List<U> newItems = await newData();
+                List<U> currentItems = collection.Select(x => instance(x)).ToList();
+                List<U> toRemove = new List<U>();
+                List<U> toAdd = newItems.Where(x => !currentItems.Any(y => x.Equals(y))).ToList();
+                List<T> toUpdate = collection.Where(x => newItems.Any(y => y.Equals(instance(x)))).ToList();
 
-            //remove items
-            foreach (U tr in toRemove)
+
+                if (remove)
+                {
+                    toRemove = currentItems.Where(x => !newItems.Any(y => x.Equals(y))).ToList();
+                }
+
+
+                //remove items
+                foreach (U tr in toRemove)
+                {
+                    collection.Remove(collection.First(x => instance(x).Equals(tr)));
+                }
+
+
+                //update still existing items
+                foreach (T vm in toUpdate)
+                {
+                    U item = instance(vm);
+                    item.Update(newItems.First(x => x.Equals(item)));
+
+                    collection.Remove(vm);
+                    collection.Add(vm);
+                }
+
+
+                //add new items
+                toAdd.ForEach(x => add(x));
+            }
+            catch(Exception ex)
             {
-                collection.Remove(collection.First(x => instance(x).Equals(tr)));
+                throw ex;
             }
-            
-            
-            //update still existing items
-            foreach (T vm in toUpdate)
-            {
-                U item = instance(vm);
-                item.Update(newItems.First(x => x.Equals(item)));
-                
-                collection.Remove(vm);
-                collection.Add(vm);
-            }
-
-
-            //add new items
-            toAdd.ForEach(x => add(x));
         }
     }
 }

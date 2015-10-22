@@ -14,8 +14,8 @@ namespace RepzScreenshot.ViewModel
     {
 
         Timer RefreshTimer = new Timer(5000);
-        
-        
+
+
         #region Properties
 
         public Server Server { get; private set; }
@@ -47,13 +47,13 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
-        public IPAddress Address 
-        { 
-            get 
+        public IPAddress Address
+        {
+            get
             {
                 return Server.Address;
             }
-            set 
+            set
             {
                 if (value != Server.Address)
                 {
@@ -100,7 +100,7 @@ namespace RepzScreenshot.ViewModel
             {
                 return UIHelper.GetMapName(Server.Map);
             }
-            
+
         }
 
         public string GameType
@@ -112,16 +112,16 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
-        
-        public ObservableCollection<PlayerViewModel> Players {get; private set; }
-        
-        
+
+        public ObservableCollection<PlayerViewModel> Players { get; private set; }
+
+
         #endregion //properties
 
 
         #region Commands
         public Command OpenCommand { get; private set; }
-        
+
         #endregion //Commands
 
 
@@ -153,68 +153,44 @@ namespace RepzScreenshot.ViewModel
 
         private void Open()
         {
-            LoadPlayers();
             MainWindowViewModel.AddWorkspace(this);
             this.RequestClose += ServerViewModel_RequestClose;
+            this.PropertyChanged += ServerViewModel_PropertyChanged;
             OpenCommand.NotifyCanExecuteChanged();
-            
+            UpdatePlayers();
+            RefreshTimer.Start();
         }
 
+       
         #endregion //command methods
 
 
         #region methods
-        private async void LoadPlayers()
-        {
-            IsLoading = true;
-            try
-            {
-                List<Player> players = await ServerDataAccess.GetPlayersAsync();
 
-                Players.Clear();
-                foreach (Player p in players)
-                {
-                    Players.Add(new PlayerViewModel(p));
-                }
-                RefreshTimer.Start();
-            }
-            catch (ExceptionBase ex)
-            {
-                SetError(ex, LoadPlayers);
-            }
-            catch (Exception)
-            {
-                SetError(new Exception("Unknown error"), LoadPlayers);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
 
         private async void UpdatePlayers()
         {
-            
+
             IsLoading = true;
             try
             {
                 await ServerDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, ServerDataAccess.GetPlayersAsync, x => x.Player, Add, true);
-                RefreshTimer.Start();
+
             }
             catch (ExceptionBase ex)
             {
                 SetError(ex, UpdatePlayers);
-                
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 SetError(new Exception("Unknown error"), UpdatePlayers);
-                
+                throw ex;
             }
             finally
             {
                 IsLoading = false;
-
+                
             }
         }
 
@@ -237,17 +213,20 @@ namespace RepzScreenshot.ViewModel
 
         void RefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            
+
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 UpdatePlayers();
+                if(Error == null)
+                    RefreshTimer.Start();
             });
-            
+
         }
 
         void ServerViewModel_RequestClose(object sender, EventArgs e)
         {
             OpenCommand.NotifyCanExecuteChanged();
+            this.RequestClose -= ServerViewModel_RequestClose;
             RefreshTimer.Stop();
         }
 
@@ -280,10 +259,23 @@ namespace RepzScreenshot.ViewModel
                 NotifyPropertyChanged(property);
         }
 
+
+        private void ServerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "Error":
+                    if(Error == null && !RefreshTimer.Enabled)
+                        RefreshTimer.Start();
+                    break;
+            }
+        }
+
+
         #endregion //event handler methods
 
 
 
-       
+
     }
 }

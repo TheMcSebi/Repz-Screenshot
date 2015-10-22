@@ -274,7 +274,7 @@ namespace RepzScreenshot.ViewModel
 
         private bool CanReload()
         {
-            return (!IsLoading);
+            return (!IsLoading && Error == null);
         }
 
         private void CmdReload()
@@ -446,6 +446,7 @@ namespace RepzScreenshot.ViewModel
                     break;
                 case "Error":
                     NotifyPropertyChanged("StatusBrush");
+                    ReloadCommand.NotifyCanExecuteChanged();
                     break;
                 case "PlayerName":
                     NotifyPropertyChanged("Title");
