@@ -15,6 +15,7 @@ namespace RepzScreenshot.DataAccess
     {
         private const string API_BASE = "http://server.repziw4.de/api/";
         private const double API_DELAY = 2;
+        private const int API_TRIES = 3;
 
         private static Dictionary<string, Player> PlayerCache;
 
@@ -36,58 +37,70 @@ namespace RepzScreenshot.DataAccess
                 url += "/";
             }
 
-            TimeSpan diff = DateTime.Now - LastRequest;
+            string res = String.Empty;
 
-            while((diff = DateTime.Now - LastRequest) < TimeSpan.FromSeconds(API_DELAY))
+            for(int i = 1; i <= API_TRIES; ++i)
             {
+                
+                TimeSpan diff = DateTime.Now - LastRequest;
 
-                TimeSpan delay = (TimeSpan.FromSeconds(API_DELAY) - diff);
-                if(delay < TimeSpan.FromMilliseconds(1))
+                while((diff = DateTime.Now - LastRequest) < TimeSpan.FromSeconds(API_DELAY))
                 {
-                    delay = TimeSpan.FromMilliseconds(100);
+
+                    TimeSpan delay = (TimeSpan.FromSeconds(API_DELAY) - diff);
+                    if(delay < TimeSpan.FromMilliseconds(1))
+                    {
+                        delay = TimeSpan.FromMilliseconds(100);
+                    }
+                    await Task.Delay(delay);
+
                 }
-                await Task.Delay(delay);
-
-            }
-            LastRequest = DateTime.Now;
-
-            string res = "";
-            try
-            {
-
-                //set headers
-                string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                client.Headers.Set("User-Agent", "Repz Screenshot Tool/" + version + "(by tccr(352737))");
-
-                res = await client.DownloadStringTaskAsync(new Uri(url));
-            }
-            catch(WebException ex)
-            {
-
-                switch(ex.Status)
-                {
-                    case WebExceptionStatus.ConnectFailure:
-                    case WebExceptionStatus.Timeout:
-                    case WebExceptionStatus.NameResolutionFailure:
-                    case WebExceptionStatus.ReceiveFailure:
-                        throw new ApiException("Server unreachable");
-
-                    case WebExceptionStatus.ProtocolError:
-                        throw new InvalidResponseException();
-                }
-
-                throw ex;
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-
-            finally
-            {
                 LastRequest = DateTime.Now;
-            }
+                
+                try
+                {
 
+                    //set headers
+                    string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    client.Headers.Set("User-Agent", "Repz Screenshot Tool/" + version + "(by tccr(352737))");
+                    res = await client.DownloadStringTaskAsync(new Uri(url));
+                    if(res != String.Empty)
+                        break;
+                }
+                catch(WebException ex)
+                {
+
+                    switch(ex.Status)
+                    {
+                        case WebExceptionStatus.ConnectFailure:
+                        case WebExceptionStatus.Timeout:
+                        case WebExceptionStatus.NameResolutionFailure:
+                        case WebExceptionStatus.ReceiveFailure:
+                            throw new ApiException("Server unreachable");
+
+                        case WebExceptionStatus.ProtocolError:
+                            if(i < API_TRIES)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                throw new InvalidResponseException();
+                            }
+                    }
+
+                    throw ex;
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
+
+                finally
+                {
+                    LastRequest = DateTime.Now;
+                }
+            }
             try
             {
                 dynamic json = JsonConvert.DeserializeObject(res);
