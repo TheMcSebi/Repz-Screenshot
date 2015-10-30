@@ -10,3 +10,4 @@
 * Draw info (User ID, Username, Date) on the image
 * Export to file
 * Upload to imgur.com
+* Report generator
