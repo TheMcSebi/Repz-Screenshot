@@ -27,6 +27,10 @@ namespace RepzScreenshot.ViewModel
 
         private RepzDataAccess RepzDataAccess { get; set; }
 
+        private static ReportListViewModel ReportListViewModel { get; set; }
+
+        private ReportViewModel Report { get; set; }
+
         public override string Title
         {
             get
@@ -226,6 +230,8 @@ namespace RepzScreenshot.ViewModel
 
         public Command UploadImageCommand { get; protected set; }
 
+        public Command AddReportCommand { get; protected set; }
+
 
         private void InitCommands()
         {
@@ -233,6 +239,7 @@ namespace RepzScreenshot.ViewModel
             ReloadCommand = new Command(CmdReload, CanReload);
             SaveImageCommand = new Command(CmdSaveImage, CanSaveImage);
             UploadImageCommand = new Command(CmdUploadImage, CanUploadImage);
+            AddReportCommand = new Command(CmdAddReport, CanAddReport);
         }
         #endregion //Commands
 
@@ -248,8 +255,13 @@ namespace RepzScreenshot.ViewModel
             InitCommands();
 
             RepzDataAccess = new RepzDataAccess();
+            Report = new ReportViewModel(this);
         }
 
+        static PlayerViewModel()
+        {
+            ReportListViewModel = new ReportListViewModel();
+        }
 
         #endregion
 
@@ -350,6 +362,22 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
+        private bool CanAddReport()
+        {
+            return IsScreenUploaded && !this.Report.ImageUrls.Contains(ScreenshotUrl);
+        }
+
+        private void CmdAddReport()
+        {
+            if(!MainWindowViewModel.Workspaces.Contains(ReportListViewModel))
+                MainWindowViewModel.AddWorkspace(ReportListViewModel);
+
+            ReportListViewModel.AddReport(Report);
+            Report.AddImage(ScreenshotUrl);
+            
+            AddReportCommand.NotifyCanExecuteChanged();
+        }
+
         #endregion
 
 
@@ -435,6 +463,7 @@ namespace RepzScreenshot.ViewModel
 
 
         #region event handler methods
+
         void PlayerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch(e.PropertyName)
@@ -453,6 +482,7 @@ namespace RepzScreenshot.ViewModel
                     break;
                 case "IsScreenUploaded":
                     UploadImageCommand.NotifyCanExecuteChanged();
+                    AddReportCommand.NotifyCanExecuteChanged();
                     break;
                 case "DrawUserInfo":
                     NotifyPropertyChanged("Screenshot");

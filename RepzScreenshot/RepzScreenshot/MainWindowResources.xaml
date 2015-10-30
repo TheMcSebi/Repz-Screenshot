@@ -34,6 +34,10 @@
         </DockPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:ReportListViewModel}">
+        <view:ReportListView />
+    </DataTemplate>
+
     <Style TargetType="TabItem">
         <Setter Property="Background" Value="{Binding Path=StatusBrush}" />
     </Style>
