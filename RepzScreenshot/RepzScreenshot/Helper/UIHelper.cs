@@ -8,6 +8,8 @@ namespace RepzScreenshot.Helper
         
         public static string RemoveColor(string name)
         {
+            if(name == null)
+                return string.Empty;
             return Regex.Replace(name, Regex.Escape("^") + "[0-9]|\\0", "");
         }
 
