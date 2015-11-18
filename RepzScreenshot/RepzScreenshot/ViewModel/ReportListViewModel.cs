@@ -30,6 +30,8 @@ namespace RepzScreenshot.ViewModel
 
         public Command CopyReportCommand { get; private set; }
 
+        public Command RemoveReportCommand { get; private set; }
+
         #endregion //commands
 
         #region constructor
@@ -39,6 +41,7 @@ namespace RepzScreenshot.ViewModel
             Reports = new ObservableCollection<ReportViewModel>();
 
             CopyReportCommand = new Command(CmdCopyReport);
+            RemoveReportCommand = new ParameterCommand<ReportViewModel>(CmdRemoveReport);
         }
 
         #endregion
@@ -93,6 +96,11 @@ namespace RepzScreenshot.ViewModel
             }
             
             Clipboard.SetText(text);
+        }
+
+        private void CmdRemoveReport(ReportViewModel report)
+        {
+            RemoveReport(report);
         }
 
         #endregion //command methods

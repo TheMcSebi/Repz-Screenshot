@@ -46,6 +46,19 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    
+                    <GridViewColumn Width="50" Header="Remove">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Width="20" Height="20" 
+                                    Command="{Binding RelativeSource=
+			                            {RelativeSource FindAncestor, 
+			                            AncestorType={x:Type ListView}}, 
+			                            Path=DataContext.RemoveReportCommand}"
+                                    CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
