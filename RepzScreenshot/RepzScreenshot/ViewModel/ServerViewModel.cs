@@ -14,6 +14,7 @@ namespace RepzScreenshot.ViewModel
     {
 
         Timer RefreshTimer = new Timer(5000);
+        private bool autoRefresh = true;
 
 
         #region Properties
@@ -109,6 +110,22 @@ namespace RepzScreenshot.ViewModel
             {
 
                 return UIHelper.GetGameTypeName(Server.GameType);
+            }
+        }
+
+        public bool AutoRefresh
+        {
+            get
+            {
+                return autoRefresh;
+            }
+            set
+            {
+                if(autoRefresh != value)
+                {
+                    autoRefresh = value;
+                    NotifyPropertyChanged("AutoRefresh");
+                }
             }
         }
 
@@ -217,6 +234,11 @@ namespace RepzScreenshot.ViewModel
             RefreshTimer = null;
         }
 
+        private void AutoRefreshChanged()
+        {
+            RefreshTimer.Enabled = AutoRefresh;
+        }
+
         #endregion //methods
 
 
@@ -282,6 +304,10 @@ namespace RepzScreenshot.ViewModel
                 case "IsLoading":
                     RefreshCommand.NotifyCanExecuteChanged();
                     break;
+                case "AutoRefresh":
+                    AutoRefreshChanged();
+                    break;
+                    
             }
         }
 

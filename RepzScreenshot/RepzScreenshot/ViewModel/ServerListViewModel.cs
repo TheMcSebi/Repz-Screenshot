@@ -12,6 +12,7 @@ namespace RepzScreenshot.ViewModel
     {
         
         private Timer RefreshTimer = new Timer(10000);
+        private bool autoRefresh = true;
 
         #region properties
         public ObservableCollection<ServerViewModel> Servers { get; private set; }
@@ -23,6 +24,22 @@ namespace RepzScreenshot.ViewModel
                 return "Server Browser";
             }
             
+        }
+
+        public bool AutoRefresh
+        {
+            get
+            {
+                return autoRefresh;
+            }
+            set
+            {
+                if (autoRefresh != value)
+                {
+                    autoRefresh = value;
+                    NotifyPropertyChanged("AutoRefresh");
+                }
+            }
         }
 
         private RepzDataAccess RepzDataAccess { get; set; }
@@ -147,6 +164,11 @@ namespace RepzScreenshot.ViewModel
             RepzDataAccess = null;
         }
 
+        private void AutoRefreshChanged()
+        {
+            RefreshTimer.Enabled = AutoRefresh;
+        }
+
         #endregion //methods
 
 
@@ -168,6 +190,9 @@ namespace RepzScreenshot.ViewModel
             {
                 case "IsLoading":
                     RefreshCommand.NotifyCanExecuteChanged();
+                    break;
+                case "AutoRefresh":
+                    AutoRefreshChanged();
                     break;
             }
         }

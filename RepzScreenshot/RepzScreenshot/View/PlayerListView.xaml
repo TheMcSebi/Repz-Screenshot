@@ -17,6 +17,7 @@
 
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
+            <CheckBox DockPanel.Dock="Left" Content="Auto Refresh" IsChecked="{Binding AutoRefresh}" HorizontalAlignment="Center" Margin="5,0,0,0"/>
             <Button Content="Refresh" Command="{Binding RefreshCommand}" Margin="5,0,0,0"/>
         </DockPanel>
         <Grid>
