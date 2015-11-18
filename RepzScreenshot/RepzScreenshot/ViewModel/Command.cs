@@ -8,6 +8,11 @@ namespace RepzScreenshot.ViewModel
         private readonly Action _action;
         private readonly Func<bool> _condition;
 
+        public Command()
+        {
+
+        }
+
         public Command(Action action, Func<bool> condition)
         {
             
@@ -17,13 +22,13 @@ namespace RepzScreenshot.ViewModel
 
         public Command(Action action):this(action, delegate { return true; }){}
 
-        public void Execute(object parameter)
+        public virtual void Execute(object parameter)
         {
             
             _action();
         }
 
-        public bool CanExecute(object parameter)
+        public virtual bool CanExecute(object parameter)
         {
             
             return _condition();

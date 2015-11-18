@@ -122,6 +122,7 @@
     <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Server.cs" />
+    <Compile Include="ViewModel\ParameterCommand.cs" />
     <Compile Include="ViewModel\Command.cs" />
     <Compile Include="ViewModel\ErrorViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
