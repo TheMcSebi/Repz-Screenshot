@@ -34,6 +34,7 @@ namespace RepzScreenshot.ViewModel
 
         #region commands
 
+        public Command RefreshCommand { get; private set; }
         #endregion commands
 
 
@@ -45,8 +46,12 @@ namespace RepzScreenshot.ViewModel
 
             LoadServers();
 
+            RefreshCommand = new Command(CmdRefresh, CanRefresh);
+
             RefreshTimer.Elapsed += RefreshTimer_Elapsed;
             RefreshTimer.AutoReset = false;
+
+            this.PropertyChanged += ServerListViewModel_PropertyChanged;
         }
 
         
@@ -55,6 +60,15 @@ namespace RepzScreenshot.ViewModel
 
         #region command methods
 
+        private bool CanRefresh()
+        {
+            return !IsLoading;
+        }
+
+        private void CmdRefresh()
+        {
+            UpdateServers();
+        }
         
         #endregion //command methods
 
@@ -146,6 +160,16 @@ namespace RepzScreenshot.ViewModel
                 UpdateServers();
             });
             
+        }
+
+        void ServerListViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "IsLoading":
+                    RefreshCommand.NotifyCanExecuteChanged();
+                    break;
+            }
         }
 
         #endregion //event handler methods

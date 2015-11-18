@@ -13,8 +13,10 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
-    <Grid>
-
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+        </DockPanel>
         <ListView ItemsSource="{Binding Source={StaticResource SortedServers}}" HorizontalContentAlignment="Stretch">
             
             <ListView.View>
@@ -45,6 +47,6 @@
             
         </ListView>
         
-    </Grid>
+    </DockPanel>
     
 </UserControl>

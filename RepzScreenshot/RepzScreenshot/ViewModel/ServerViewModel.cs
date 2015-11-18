@@ -121,6 +121,7 @@ namespace RepzScreenshot.ViewModel
 
         #region Commands
         public Command OpenCommand { get; private set; }
+        public Command RefreshCommand { get; private set; }
 
         #endregion //Commands
 
@@ -135,6 +136,7 @@ namespace RepzScreenshot.ViewModel
             ServerDataAccess = new ServerDataAccess(Server);
 
             OpenCommand = new Command(Open, CanOpen);
+            RefreshCommand = new Command(CmdRefresh, CanRefresh);
             Players = new ObservableCollection<PlayerViewModel>();
 
             RefreshTimer.Elapsed += RefreshTimer_Elapsed;
@@ -161,6 +163,15 @@ namespace RepzScreenshot.ViewModel
             RefreshTimer.Start();
         }
 
+        private bool CanRefresh()
+        {
+            return !IsLoading;
+        }
+
+        private void CmdRefresh()
+        {
+            UpdatePlayers();
+        }
        
         #endregion //command methods
 
@@ -267,6 +278,9 @@ namespace RepzScreenshot.ViewModel
                 case "Error":
                     if(Error == null && !RefreshTimer.Enabled)
                         RefreshTimer.Start();
+                    break;
+                case "IsLoading":
+                    RefreshCommand.NotifyCanExecuteChanged();
                     break;
             }
         }

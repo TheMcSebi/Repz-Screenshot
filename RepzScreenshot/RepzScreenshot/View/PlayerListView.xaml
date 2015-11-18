@@ -16,6 +16,9 @@
     </UserControl.Resources>
 
     <DockPanel>
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}" Margin="5,0,0,0"/>
+        </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
