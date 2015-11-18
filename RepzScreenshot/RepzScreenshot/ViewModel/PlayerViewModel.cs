@@ -275,13 +275,7 @@ namespace RepzScreenshot.ViewModel
 
         private void CmdGetScreenshot()
         {
-            MainWindowViewModel.AddWorkspace(this);
-            NotifyPropertyChanged("StatusBrush");
-            this.RequestClose += PlayerViewModel_RequestClose;
-            ScreenshotCommand.NotifyCanExecuteChanged();
-
-            if(Screenshot == null && Error == null)
-                GetScreenshot();
+            Open();
         }
 
         private bool CanReload()
@@ -382,6 +376,18 @@ namespace RepzScreenshot.ViewModel
 
 
         #region methods
+
+        public void Open()
+        {
+            MainWindowViewModel.AddWorkspace(this);
+            NotifyPropertyChanged("StatusBrush");
+            this.RequestClose += PlayerViewModel_RequestClose;
+            ScreenshotCommand.NotifyCanExecuteChanged();
+
+            if (Screenshot == null && Error == null)
+                GetScreenshot();
+        }
+
 
         private async void GetScreenshot()
         {

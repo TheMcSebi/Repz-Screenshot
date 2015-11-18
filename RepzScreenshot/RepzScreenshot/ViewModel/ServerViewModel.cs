@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Timers;
+using System.Linq;
 
 namespace RepzScreenshot.ViewModel
 {
@@ -139,6 +140,7 @@ namespace RepzScreenshot.ViewModel
         #region Commands
         public Command OpenCommand { get; private set; }
         public Command RefreshCommand { get; private set; }
+        public Command GetAllCommand { get; private set; }
 
         #endregion //Commands
 
@@ -152,8 +154,10 @@ namespace RepzScreenshot.ViewModel
 
             ServerDataAccess = new ServerDataAccess(Server);
 
-            OpenCommand = new Command(Open, CanOpen);
+            OpenCommand = new Command(CmdOpen, CanOpen);
             RefreshCommand = new Command(CmdRefresh, CanRefresh);
+            GetAllCommand = new Command(CmdGetAll, CanGetAll);
+
             Players = new ObservableCollection<PlayerViewModel>();
 
             RefreshTimer.Elapsed += RefreshTimer_Elapsed;
@@ -170,7 +174,7 @@ namespace RepzScreenshot.ViewModel
             return !(MainWindowViewModel.Workspaces.Contains(this));
         }
 
-        private void Open()
+        private void CmdOpen()
         {
             MainWindowViewModel.AddWorkspace(this);
             this.RequestClose += ServerViewModel_RequestClose;
@@ -188,6 +192,21 @@ namespace RepzScreenshot.ViewModel
         private void CmdRefresh()
         {
             UpdatePlayers();
+        }
+
+        private bool CanGetAll()
+        {
+            return Players.Any(x => x.Screenshot == null && !MainWindowViewModel.Workspaces.Contains(x) && x.Error == null);
+
+        }
+
+        private void CmdGetAll()
+        {
+            List<PlayerViewModel> toDo = Players.Where(x => x.Screenshot == null && !MainWindowViewModel.Workspaces.Contains(x) && x.Error == null).ToList();
+            foreach(PlayerViewModel p in toDo)
+            {
+                p.Open();
+            }
         }
        
         #endregion //command methods
@@ -218,7 +237,7 @@ namespace RepzScreenshot.ViewModel
             finally
             {
                 IsLoading = false;
-                
+                GetAllCommand.NotifyCanExecuteChanged();
             }
         }
 
