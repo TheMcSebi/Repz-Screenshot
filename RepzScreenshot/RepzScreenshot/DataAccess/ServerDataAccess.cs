@@ -71,8 +71,11 @@ namespace RepzScreenshot.DataAccess
                         string name = info["name"].Value;
                         int score = Convert.ToInt32(info["score"].Value);
                         int ping = Convert.ToInt32(info["ping"].Value);
-                            
-                        players.Add(new Player(name, score, ping ));
+
+                        Player p = await RepzDataAccess.GetPlayer(name, false);
+                        p.Score = score;
+                        p.Ping = ping;
+                        players.Add(p);
                     }
                     return players;
                 }

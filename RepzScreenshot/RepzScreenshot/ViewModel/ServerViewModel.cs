@@ -243,8 +243,7 @@ namespace RepzScreenshot.ViewModel
 
         private void Add(Player p)
         {
-            PlayerViewModel vm = new PlayerViewModel(p);
-            Players.Add(vm);
+            Players.Add(RepzDataAccess.GetPlayerVM(p));
         }
 
         public void Dispose()

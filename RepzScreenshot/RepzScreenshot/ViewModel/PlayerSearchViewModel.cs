@@ -80,7 +80,7 @@ namespace RepzScreenshot.ViewModel
 
         private void AddPlayer(Player p)
         {
-            Players.Add(new PlayerViewModel(p));
+            Players.Add(RepzDataAccess.GetPlayerVM(p));
         }
 
         private void RemovePlayer(Player p)

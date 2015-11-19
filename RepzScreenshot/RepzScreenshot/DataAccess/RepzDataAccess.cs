@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Reflection;
+using RepzScreenshot.ViewModel;
 
 namespace RepzScreenshot.DataAccess
 {
@@ -18,6 +19,7 @@ namespace RepzScreenshot.DataAccess
         private const int API_TRIES = 3;
 
         private static Dictionary<string, Player> PlayerCache;
+        private static Dictionary<Player, PlayerViewModel> PlayerVMCache;
 
         private static WebClient client = new WebClient();
         private static DateTime LastRequest { get; set; }
@@ -28,6 +30,7 @@ namespace RepzScreenshot.DataAccess
         {
             LastRequest = new DateTime();
             PlayerCache = new Dictionary<string, Player>();
+            PlayerVMCache = new Dictionary<Player, PlayerViewModel>();
         }
         protected static async Task<dynamic> ApiCallAsync(string url)
         {
@@ -166,6 +169,8 @@ namespace RepzScreenshot.DataAccess
                             p = new Player(id, username);
                             PlayerCache.Add(username, p);
                         }
+                        p.Id = id;
+                        p.Name = username;
 
                         players.Add(p);
                     }
@@ -181,12 +186,26 @@ namespace RepzScreenshot.DataAccess
 
         public static async Task<Player> GetPlayer(string name)
         {
+            return await GetPlayer(name, true);
+        }
 
+        public static async Task<Player> GetPlayer(string name, bool online)
+        {
+            Player player = new Player(0, name);
             //check cache
             if(PlayerCache.ContainsKey(name))
             {
-                return PlayerCache[name];
+                player = PlayerCache[name];
+                if (!online || player.Id != 0)
+                    return player;
             }
+
+            if(!online)
+            {
+                PlayerCache.Add(name, player);
+                return player;
+            }
+
             try
             {
                 List<Player> players = await FindPlayers(name);
@@ -306,12 +325,23 @@ namespace RepzScreenshot.DataAccess
             }
         }
 
+        public static PlayerViewModel GetPlayerVM(Player p)
+        {
+            PlayerViewModel vm = null;
+            if(!PlayerVMCache.TryGetValue(p, out vm))
+            {
+                vm = new PlayerViewModel(p);
+                PlayerVMCache.Add(p, vm);
+            }
+            
+            return vm;
+        }
+
         public void Dispose()
         {
             client.Dispose();
             client = null;
         }
-
 
     }
 }
