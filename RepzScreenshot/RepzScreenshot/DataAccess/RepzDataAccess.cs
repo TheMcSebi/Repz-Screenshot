@@ -15,7 +15,7 @@ namespace RepzScreenshot.DataAccess
     class RepzDataAccess : DataAccessBase, IDisposable
     {
         private const string API_BASE = "http://server.repziw4.de/api/";
-        private const double API_DELAY = 2;
+        private const double API_DELAY = 1.2;
         private const int API_TRIES = 3;
 
         private static Dictionary<string, Player> PlayerCache;
