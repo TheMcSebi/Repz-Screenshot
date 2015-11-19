@@ -31,7 +31,7 @@
                     <GridViewColumn Width="500" Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Path=PlayerViewModel.PlayerName}" />
+                                <TextBlock Text="{Binding Path=PlayerViewModel.CleanName}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

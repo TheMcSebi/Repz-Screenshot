@@ -34,7 +34,7 @@ namespace RepzScreenshot.ViewModel
         {
             get
             {
-                return PlayerName;
+                return CleanName;
             }
         }
 
@@ -58,7 +58,7 @@ namespace RepzScreenshot.ViewModel
         { 
             get 
             {
-                return UIHelper.RemoveColor(Player.Name);
+                return Player.Name;
             }
             set 
             { 
@@ -67,6 +67,14 @@ namespace RepzScreenshot.ViewModel
                     Player.Name = value;
                     NotifyPropertyChanged("PlayerName");
                 }
+            }
+        }
+
+        public string CleanName
+        {
+            get
+            {
+                return UIHelper.RemoveColor(PlayerName);
             }
         }
 
@@ -483,6 +491,7 @@ namespace RepzScreenshot.ViewModel
                     break;
                 case "PlayerName":
                     NotifyPropertyChanged("Title");
+                    NotifyPropertyChanged("CleanName");
                     break;
                 case "IsScreenUploaded":
                     UploadImageCommand.NotifyCanExecuteChanged();

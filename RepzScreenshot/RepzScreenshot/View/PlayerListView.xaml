@@ -44,7 +44,7 @@
                     <GridView>
 
                         <GridViewColumn Width="{Binding ElementName=first, Path=ActualWidth}" Header="Name"
-                        DisplayMemberBinding="{Binding PlayerName}"  />
+                        DisplayMemberBinding="{Binding CleanName}"  />
                         <GridViewColumn Width="{Binding ElementName=second, Path=ActualWidth}" Header="Score"
                         DisplayMemberBinding="{Binding PlayerScore}"/>
 
