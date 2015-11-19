@@ -10,6 +10,8 @@ namespace RepzScreenshot.Model
         private int score;
         private int ping;
         private string hostname;
+        private string game;
+        private string country;
 
 
         #region properties
@@ -89,6 +91,38 @@ namespace RepzScreenshot.Model
                 {
                     hostname = value;
                     NotifyPropertyChanged("Hostname");
+                }
+            }
+        }
+
+        public string Game
+        {
+            get
+            {
+                return game;
+            }
+            set
+            {
+                if (game != value)
+                {
+                    game = value;
+                    NotifyPropertyChanged("Game");
+                }
+            }
+        }
+
+        public string Country
+        {
+            get
+            {
+                return country;
+            }
+            set
+            {
+                if (country != value)
+                {
+                    country = value;
+                    NotifyPropertyChanged("Country");
                 }
             }
         }

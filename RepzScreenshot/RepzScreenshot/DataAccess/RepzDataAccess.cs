@@ -140,7 +140,13 @@ namespace RepzScreenshot.DataAccess
             {
                 dynamic result = JObject.Parse((string)json.result);
                 string hostname = result.hostname;
+                string game = result.game;
+                string country = json.connection_data.Country;
+                
                 p.Hostname = hostname;
+                p.Game = game;
+                p.Country = country;
+
             }
             else if(json.status == 204 && json.result == "Offline")
             {

@@ -24,6 +24,11 @@ namespace RepzScreenshot.Helper
             return GetFromDict(gametypes, name);
         }
 
+        public static string GetGameName(string name)
+        {
+            return GetFromDict(games, name);
+        }
+
         private static string GetFromDict(Dictionary<string, string> dict, string key)
         {
             string val = key;
@@ -93,6 +98,18 @@ namespace RepzScreenshot.Helper
                { "m40a3", "M40A3" },
                { "snipe", "Snipe" },
             };
+
+        private static Dictionary<string, string> games = new Dictionary<string, string>()
+        {
+            {"iw4sp", "Modern Warfare 2 SP"},
+            {"iw4m", "Modern Warfare 2"},
+            {"iw5sp", "Modern Warfare 3 SP"},
+            {"iw5m", "Modern Warfare 3"},
+            {"t5sp", "Repz Ops SP"},
+            {"t5m", "Repz Ops"},
+            {"t6sp", "Repz Ops 2 SP"},
+            {"t6m", "Repz Ops 2"},
+        };
         #endregion //dictionaries
     }
 }

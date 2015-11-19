@@ -110,6 +110,22 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
+        public string PlayerGame
+        {
+            get
+            {
+                return UIHelper.GetGameName(Player.Game);
+            }
+        }
+
+        public string PlayerCountry
+        {
+            get
+            {
+                return Player.Country;
+            }
+        }
+
         public bool DrawUserInfo
         {
             get
@@ -536,6 +552,12 @@ namespace RepzScreenshot.ViewModel
                     break;
                 case "Hostname":
                     property = "ServerHostname";
+                    break;
+                case "Game":
+                    property = "PlayerGame";
+                    break;
+                case "Country":
+                    property = "PlayerCountry";
                     break;
                     
             }

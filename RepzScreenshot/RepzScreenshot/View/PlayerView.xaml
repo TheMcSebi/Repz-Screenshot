@@ -38,29 +38,48 @@
                         <RowDefinition Height="20" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
 
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="0" Grid.Column="0" 
-         Text="ID" Height="20" VerticalAlignment="Top" />
+                        Text="ID" Height="20" VerticalAlignment="Top" />
+                    
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="1" Grid.Column="0" 
-         Text="Name" Height="20" VerticalAlignment="Top" />
+                        Text="Name" Height="20" VerticalAlignment="Top" />
+                    
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="2" Grid.Column="0" 
-         Text="Server" Height="20" VerticalAlignment="Top" />
+                        Text="Server" Height="20" VerticalAlignment="Top" />
+                    
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="3" Grid.Column="0" 
-         Text="Date" Height="20" VerticalAlignment="Top" />
+                        Text="Game" Height="20" VerticalAlignment="Top" />
+                    
+                    <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="4" Grid.Column="0" 
+                        Text="Country" Height="20" VerticalAlignment="Top" />
+                    
+                    <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="5" Grid.Column="0" 
+                        Text="Date" Height="20" VerticalAlignment="Top" />
 
                     <TextBox Background="Transparent" BorderThickness="0" Text="{Binding PlayerId, Mode=OneWay}" 
                              FontSize="14" Grid.Row="0" Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap" />
                     
                     <TextBox Background="Transparent" BorderThickness="0" Text="{Binding PlayerName, Mode=OneWay}"
                              FontSize="14" Grid.Row="1" Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap" />
+                    
                     <TextBlock FontSize="14" Grid.Row="2" Grid.Column="1" 
-         Text="{Binding ServerHostname}" Height="20" VerticalAlignment="Top" />
+                        Text="{Binding ServerHostname}" Height="20" VerticalAlignment="Top" />
+
                     <TextBlock FontSize="14" Grid.Row="3" Grid.Column="1" 
-         Text="{Binding ScreenshotDate, StringFormat=yyyy-MM-dd HH:mm}" Height="20" VerticalAlignment="Top" />
+                        Text="{Binding PlayerGame}" Height="20" VerticalAlignment="Top" />
+
+                    <TextBlock FontSize="14" Grid.Row="4" Grid.Column="1" 
+                        Text="{Binding PlayerCountry}" Height="20" VerticalAlignment="Top" />
+
+                    <TextBlock FontSize="14" Grid.Row="5" Grid.Column="1" 
+                        Text="{Binding ScreenshotDate, StringFormat=yyyy-MM-dd HH:mm}" Height="20" VerticalAlignment="Top" />
 
                 </Grid>
-
+                
                 <GroupBox Header="Control" Margin="10" DockPanel.Dock="Top" Padding="10" VerticalAlignment="Top">
                     <StackPanel>
                         <CheckBox Content="Draw User Info" IsChecked="{Binding DrawUserInfo}" Margin="10,5,0,5"/>
