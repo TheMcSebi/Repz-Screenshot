@@ -41,7 +41,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="0" Grid.Column="0" 
-         Text="Id" Height="20" VerticalAlignment="Top" />
+         Text="ID" Height="20" VerticalAlignment="Top" />
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="1" Grid.Column="0" 
          Text="Name" Height="20" VerticalAlignment="Top" />
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="2" Grid.Column="0" 
@@ -49,10 +49,11 @@
                     <TextBlock FontSize="14" FontWeight="Bold" Grid.Row="3" Grid.Column="0" 
          Text="Date" Height="20" VerticalAlignment="Top" />
 
-                    <TextBlock FontSize="14" Grid.Row="0" Grid.Column="1" 
-         Text="{Binding PlayerId}" Height="20" VerticalAlignment="Top" />
-                    <TextBlock FontSize="14" Grid.Row="1" Grid.Column="1" 
-         Text="{Binding PlayerName}" Height="20" VerticalAlignment="Top" />
+                    <TextBox Background="Transparent" BorderThickness="0" Text="{Binding PlayerId, Mode=OneWay}" 
+                             FontSize="14" Grid.Row="0" Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap" />
+                    
+                    <TextBox Background="Transparent" BorderThickness="0" Text="{Binding PlayerName, Mode=OneWay}"
+                             FontSize="14" Grid.Row="1" Grid.Column="1" IsReadOnly="True" TextWrapping="Wrap" />
                     <TextBlock FontSize="14" Grid.Row="2" Grid.Column="1" 
          Text="{Binding ServerHostname}" Height="20" VerticalAlignment="Top" />
                     <TextBlock FontSize="14" Grid.Row="3" Grid.Column="1" 
