@@ -42,7 +42,6 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
-        private RepzDataAccess RepzDataAccess { get; set; }
 
 
 
@@ -58,7 +57,6 @@ namespace RepzScreenshot.ViewModel
         #region constructor
         public ServerListViewModel():base(false)
         {
-            RepzDataAccess = new RepzDataAccess();
             Servers = new ObservableCollection<ServerViewModel>();
 
             LoadServers();
@@ -159,9 +157,6 @@ namespace RepzScreenshot.ViewModel
         {
             RefreshTimer.Dispose();
             RefreshTimer = null;
-
-            RepzDataAccess.Dispose();
-            RepzDataAccess = null;
         }
 
         private void AutoRefreshChanged()

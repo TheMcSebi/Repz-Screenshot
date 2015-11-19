@@ -19,7 +19,7 @@ namespace RepzScreenshot.DataAccess
 
         private static Dictionary<string, Player> PlayerCache;
 
-        private WebClient client = new WebClient();
+        private static WebClient client = new WebClient();
         private static DateTime LastRequest { get; set; }
 
 
@@ -29,7 +29,7 @@ namespace RepzScreenshot.DataAccess
             LastRequest = new DateTime();
             PlayerCache = new Dictionary<string, Player>();
         }
-        protected async Task<dynamic> ApiCallAsync(string url)
+        protected static async Task<dynamic> ApiCallAsync(string url)
         {
 
             if(!url.EndsWith("/"))
@@ -115,7 +115,7 @@ namespace RepzScreenshot.DataAccess
         }
 
 
-        public async Task GetIdAsync(Player player)
+        public static async Task GetIdAsync(Player player)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace RepzScreenshot.DataAccess
             }
         }
 
-        public async Task GetPresenceDataAsync(Player p)
+        public static async Task GetPresenceDataAsync(Player p)
         {
             dynamic json = await ApiCallAsync(API_BASE + "presenceData/" + p.Id);
 
@@ -146,7 +146,7 @@ namespace RepzScreenshot.DataAccess
 
         }
 
-        public async Task<List<Player>> FindPlayers(string name)
+        public static async Task<List<Player>> FindPlayers(string name)
         {
             List<Player> players = new List<Player>();
             try
@@ -179,7 +179,7 @@ namespace RepzScreenshot.DataAccess
             }
         }
 
-        public async Task<Player> GetPlayer(string name)
+        public static async Task<Player> GetPlayer(string name)
         {
 
             //check cache
@@ -224,7 +224,7 @@ namespace RepzScreenshot.DataAccess
             }
         }
 
-        public async Task<BitmapImage> GetScreenshotAsync(Player player)
+        public static async Task<BitmapImage> GetScreenshotAsync(Player player)
         {
             bool done = false;
             for(int tries = 0; tries < 20 && !done; ++tries)
@@ -275,7 +275,7 @@ namespace RepzScreenshot.DataAccess
 
         }
 
-        public async Task<List<Server>> GetServersAsync()
+        public static async Task<List<Server>> GetServersAsync()
         {
             try
             {

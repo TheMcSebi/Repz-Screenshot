@@ -25,7 +25,6 @@ namespace RepzScreenshot.ViewModel
         #region properties
         public Player Player { get; private set; }
 
-        private RepzDataAccess RepzDataAccess { get; set; }
 
         private static ReportListViewModel ReportListViewModel { get; set; }
 
@@ -254,7 +253,6 @@ namespace RepzScreenshot.ViewModel
             this.PropertyChanged += PlayerViewModel_PropertyChanged;
             InitCommands();
 
-            RepzDataAccess = new RepzDataAccess();
             Report = new ReportViewModel(this);
         }
 

@@ -12,7 +12,7 @@ namespace RepzScreenshot.DataAccess
     {
 
 
-        public async Task UpdateCollection<T, U>(ObservableCollection<T> collection, Func<Task<List<U>>> newData, Func<T, U> instance, Action<U> add, bool remove)
+        public static async Task UpdateCollection<T, U>(ObservableCollection<T> collection, Func<Task<List<U>>> newData, Func<T, U> instance, Action<U> add, bool remove)
             where T : ViewModelBase
             where U : ModelBase, IEquatable<U>
         {

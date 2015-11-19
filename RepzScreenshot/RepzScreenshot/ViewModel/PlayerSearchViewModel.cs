@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace RepzScreenshot.ViewModel
 {
-    class PlayerSearchViewModel : WorkspaceViewModel, IDataErrorInfo, IDisposable
+    class PlayerSearchViewModel : WorkspaceViewModel, IDataErrorInfo
     {
-        private RepzDataAccess RepzDataAccess;
         private string searchQuery = String.Empty;
 
         #region properties
@@ -62,8 +61,7 @@ namespace RepzScreenshot.ViewModel
         public PlayerSearchViewModel() : base(false)
         {
             Players = new ObservableCollection<PlayerViewModel>();
-            RepzDataAccess = new RepzDataAccess();
-
+            
             InitCommands();
 
             this.PropertyChanged += PlayerSearchViewModel_PropertyChanged;
@@ -90,11 +88,6 @@ namespace RepzScreenshot.ViewModel
             Players.Remove(Players.First(x => x.Player.OriginalName.Equals(p.OriginalName)));
         }
 
-        public void Dispose()
-        {
-            RepzDataAccess.Dispose();
-            RepzDataAccess = null;
-        }
 
         #endregion //methods
 
