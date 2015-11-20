@@ -42,10 +42,13 @@ namespace RepzScreenshot.DataAccess
                 foreach (T vm in toUpdate)
                 {
                     U item = instance(vm);
-                    item.Update(newItems.First(x => x.Equals(item)));
+                    if(item.Update(newItems.First(x => x.Equals(item))))
+                    {
+                        collection.Remove(vm);
+                        collection.Add(vm);
+                    }
 
-                    collection.Remove(vm);
-                    collection.Add(vm);
+                    
                 }
 
 

@@ -153,14 +153,16 @@ namespace RepzScreenshot.Model
 
         #region methods
 
-        public override void Update(ModelBase p)
+        public override bool Update(ModelBase p)
         {
             if(p is Player)
             {
-                Score = ((Player)p).Score;
-                Ping = ((Player)p).Ping;
+                return (UpdateProperty("Score", ((Player)p).Score) || UpdateProperty("Ping", ((Player)p).Ping));
             }
-            
+            else
+            {
+                return false;
+            }
         }
 
         public override string ToString()

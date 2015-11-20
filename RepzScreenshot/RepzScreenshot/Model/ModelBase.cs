@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace RepzScreenshot.Model
 {
@@ -18,8 +19,23 @@ namespace RepzScreenshot.Model
             }
         }
 
+        protected bool UpdateProperty<T>(string propertyName, T val)
+        {
+            PropertyInfo property = this.GetType().GetProperty(propertyName);
+            
+            if(!((T)property.GetValue(this)).Equals(val))
+            {
+                property.SetValue(this, val);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
 
-        public abstract void Update(ModelBase m);
+        public abstract bool Update(ModelBase m);
         
     }
 }

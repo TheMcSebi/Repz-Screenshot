@@ -172,14 +172,21 @@ namespace RepzScreenshot.Model
 
         #region methods
 
-        public override void Update(ModelBase s)
+        public override bool Update(ModelBase s)
         {
             if(s is Server)
-            Hostname = ((Server)s).Hostname;
-            Clients = ((Server)s).Clients;
-            MaxClients = ((Server)s).MaxClients;
-            Map = ((Server)s).Map;
-            GameType = ((Server)s).GameType;
+            {
+                return (UpdateProperty("Hostname", ((Server)s).Hostname)
+                || UpdateProperty("Clients", ((Server)s).Clients)
+                || UpdateProperty("MaxClients", ((Server)s).MaxClients)
+                || UpdateProperty("Map", ((Server)s).Map)
+                || UpdateProperty("GameType", ((Server)s).GameType));
+            }
+            else
+            {
+                return false;
+            }
+            
         }
 
         public override string ToString()
