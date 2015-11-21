@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using RepzScreenshot.Extension;
 
 namespace RepzScreenshot.DataAccess
 {
@@ -48,6 +49,8 @@ namespace RepzScreenshot.DataAccess
                     await udpClient.SendAsync(sendBytes, sendBytes.Length);
 
 
+                    udpClient.SetTimeout(TimeSpan.FromSeconds(10));
+                    
                     UdpReceiveResult receive = await udpClient.ReceiveAsync();
 
                     string returnData = Encoding.ASCII.GetString(receive.Buffer);
@@ -87,6 +90,10 @@ namespace RepzScreenshot.DataAccess
                     }
                     throw ex;
                 }
+                catch(ObjectDisposedException)
+                {
+                    throw new ApiException("Server unreachable");
+                }
                 catch (Exception ex)
                 {
                     throw ex;
@@ -95,5 +102,9 @@ namespace RepzScreenshot.DataAccess
 
         }
 
+        
+
     }
+
+    
 }
