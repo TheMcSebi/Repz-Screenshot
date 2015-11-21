@@ -2,7 +2,6 @@
 using RepzScreenshot.Model;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,8 +25,7 @@ namespace RepzScreenshot.DataAccess
                 
                 try
                 {
-                    udpClient.Client.ReceiveTimeout = 3000;
-                    udpClient.Client.SendTimeout = 3000;
+                    
                     udpClient.Connect(server.Address, server.Port);
                         
 
@@ -48,8 +46,6 @@ namespace RepzScreenshot.DataAccess
 
 
                     await udpClient.SendAsync(sendBytes, sendBytes.Length);
-
-                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(server.Address, server.Port);
 
 
                     UdpReceiveResult receive = await udpClient.ReceiveAsync();
