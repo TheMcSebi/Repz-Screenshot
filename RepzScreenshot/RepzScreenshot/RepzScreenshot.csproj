@@ -119,6 +119,7 @@
     <Compile Include="Error\ScreenshotException.cs" />
     <Compile Include="Error\UserNotFoundException.cs" />
     <Compile Include="Error\UserOfflineException.cs" />
+    <Compile Include="Extension\DisposableTimeout.cs" />
     <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Server.cs" />
