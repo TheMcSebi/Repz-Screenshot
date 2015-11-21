@@ -268,7 +268,7 @@ namespace RepzScreenshot.ViewModel
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 UpdatePlayers();
-                if(Error == null)
+                if(Error == null && AutoRefresh)
                     RefreshTimer.Start();
             });
 
@@ -316,7 +316,7 @@ namespace RepzScreenshot.ViewModel
             switch(e.PropertyName)
             {
                 case "Error":
-                    if(Error == null && !RefreshTimer.Enabled)
+                    if(Error == null && !RefreshTimer.Enabled && AutoRefresh)
                         RefreshTimer.Start();
                     break;
                 case "IsLoading":

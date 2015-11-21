@@ -128,7 +128,12 @@ namespace RepzScreenshot.ViewModel
             try
             {
                 await RepzDataAccess.UpdateCollection(Servers, RepzDataAccess.GetServersAsync, x => x.Server, x => Add(x), false);
-                RefreshTimer.Start();
+                
+                if(AutoRefresh)
+                {
+                    RefreshTimer.Start();
+                }
+                
             }
             catch(ExceptionBase ex)
             {
