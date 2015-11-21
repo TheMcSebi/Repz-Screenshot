@@ -59,7 +59,7 @@ namespace RepzScreenshot.ViewModel
         {
             Servers = new ObservableCollection<ServerViewModel>();
 
-            LoadServers();
+            
 
             RefreshCommand = new Command(CmdRefresh, CanRefresh);
 
@@ -67,6 +67,8 @@ namespace RepzScreenshot.ViewModel
             RefreshTimer.AutoReset = false;
 
             this.PropertyChanged += ServerListViewModel_PropertyChanged;
+
+            UpdateServers();
         }
 
         
@@ -90,35 +92,6 @@ namespace RepzScreenshot.ViewModel
 
         #region methods
 
-        
-        private async void LoadServers()
-        {
-            IsLoading = true;
-            try
-            {
-                List<Server> servers = await RepzDataAccess.GetServersAsync();
-                Servers.Clear();
-
-                foreach (Server s in servers)
-                {
-                    Servers.Add(new ServerViewModel(s));
-                }
-                RefreshTimer.Start();
-            }
-            catch(ExceptionBase ex)
-            {
-                SetError(ex, LoadServers);
-            }
-            catch(Exception)
-            {
-                SetError(new Exception("Unknown error"), LoadServers);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-            
-        }
 
         private async void UpdateServers()
         {
