@@ -12,7 +12,7 @@ using RepzScreenshot.ViewModel;
 
 namespace RepzScreenshot.DataAccess
 {
-    class RepzDataAccess : DataAccessBase, IDisposable
+    class RepzDataAccess : DataAccessBase
     {
         private const string API_BASE = "http://server.repziw4.de/api/";
         private const double API_DELAY = 1.2;
@@ -21,7 +21,6 @@ namespace RepzScreenshot.DataAccess
         private static Dictionary<string, Player> PlayerCache;
         private static Dictionary<Player, PlayerViewModel> PlayerVMCache;
 
-        private static WebClient client = new WebClient();
         private static DateTime LastRequest { get; set; }
 
 
@@ -44,8 +43,8 @@ namespace RepzScreenshot.DataAccess
 
             for(int i = 1; i <= API_TRIES; ++i)
             {
-                
-                TimeSpan diff = DateTime.Now - LastRequest;
+
+                TimeSpan diff;
 
                 while((diff = DateTime.Now - LastRequest) < TimeSpan.FromSeconds(API_DELAY))
                 {
@@ -62,13 +61,15 @@ namespace RepzScreenshot.DataAccess
                 
                 try
                 {
-
-                    //set headers
-                    string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    client.Headers.Set("User-Agent", "Repz Screenshot Tool/" + version + "(by tccr(352737))");
-                    res = await client.DownloadStringTaskAsync(new Uri(url));
-                    if(res != String.Empty)
-                        break;
+                    using (WebClient client = new WebClient())
+                    {
+                        //set headers
+                        string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                        client.Headers.Set("User-Agent", "Repz Screenshot Tool/" + version + "(by tccr(352737))");
+                        res = await client.DownloadStringTaskAsync(new Uri(url));
+                        if (res != String.Empty)
+                            break;
+                    }
                 }
                 catch(WebException ex)
                 {
@@ -341,12 +342,6 @@ namespace RepzScreenshot.DataAccess
             }
             
             return vm;
-        }
-
-        public void Dispose()
-        {
-            client.Dispose();
-            client = null;
         }
 
     }
