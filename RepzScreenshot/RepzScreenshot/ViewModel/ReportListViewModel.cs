@@ -32,6 +32,8 @@ namespace RepzScreenshot.ViewModel
 
         public Command RemoveReportCommand { get; private set; }
 
+        public Command RemoveAllCommand { get; private set; }
+
         #endregion //commands
 
         #region constructor
@@ -42,6 +44,7 @@ namespace RepzScreenshot.ViewModel
 
             CopyReportCommand = new Command(CmdCopyReport);
             RemoveReportCommand = new ParameterCommand<ReportViewModel>(CmdRemoveReport);
+            RemoveAllCommand = new Command(CmdRemoveAll);
         }
 
         #endregion
@@ -101,6 +104,11 @@ namespace RepzScreenshot.ViewModel
         private void CmdRemoveReport(ReportViewModel report)
         {
             RemoveReport(report);
+        }
+
+        private void CmdRemoveAll()
+        {
+            Reports.Clear();
         }
 
         #endregion //command methods
