@@ -43,13 +43,14 @@ namespace RepzScreenshot.ViewModel
         public ObservableCollection<PlayerViewModel> Players { get; private set; }
 
 
-
         #endregion //properties
 
 
         #region Commands
 
         public Command SearchCommand{ get; private set; }
+
+        public ParameterCommand<PlayerViewModel> OpenPlayerCommand { get; private set; }
 
         
 
@@ -76,6 +77,7 @@ namespace RepzScreenshot.ViewModel
         private void InitCommands()
         {
             SearchCommand = new Command(CmdSearch, CanSearch);
+            OpenPlayerCommand = new ParameterCommand<PlayerViewModel>(CmdOpenPlayer, CanOpenPlayer);
         }
 
         private void AddPlayer(Player p)
@@ -117,6 +119,20 @@ namespace RepzScreenshot.ViewModel
         {
             return await RepzDataAccess.FindPlayers(SearchQuery);
         }
+
+        private bool CanOpenPlayer(PlayerViewModel pvm)
+        {
+            return !MainWindowViewModel.Workspaces.Contains(pvm);
+        }
+
+        private void CmdOpenPlayer(PlayerViewModel pvm)
+        {
+            MainWindowViewModel.AddWorkspace(pvm);
+            pvm.OnOpen();
+            
+            OpenPlayerCommand.NotifyCanExecuteChanged();
+        }
+
 
         #endregion //command methods
 

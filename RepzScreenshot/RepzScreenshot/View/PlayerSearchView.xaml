@@ -49,7 +49,11 @@ d:DesignHeight="300" d:DesignWidth="300">
                         <GridViewColumn Width="auto" Header="Screenshot">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Screenshot" Command="{Binding ScreenshotCommand}" />
+                                    <Button Content="Screenshot"
+                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+			                                    AncestorType={x:Type ListView}}, 
+			                                    Path=DataContext.OpenPlayerCommand}"
+                                            CommandParameter="{Binding}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
