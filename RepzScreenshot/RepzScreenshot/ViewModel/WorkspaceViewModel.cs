@@ -7,6 +7,7 @@ namespace RepzScreenshot.ViewModel
         private ErrorViewModel error;
 
         public event EventHandler RequestClose;
+        public event EventHandler OpenWorkspace;
 
         public Command CloseCommand { get; private set; }
 
@@ -54,6 +55,13 @@ namespace RepzScreenshot.ViewModel
         private void OnRequestClose()
         {
             EventHandler handler = this.RequestClose;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        public void OnOpen()
+        {
+            EventHandler handler = this.OpenWorkspace;
             if (handler != null)
                 handler(this, EventArgs.Empty);
         }

@@ -4,7 +4,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:view="clr-namespace:RepzScreenshot.View"
 xmlns:vm="clr-namespace:RepzScreenshot.ViewModel"
 xmlns:local="clr-namespace:RepzScreenshot"
-Title="Repz Screenshot" Height="570" Width="1000" MinHeight="570" MinWidth="1000" ResizeMode="CanResizeWithGrip">
+Title="Repz Screenshot" Height="600" Width="1000" MinHeight="600" MinWidth="1000" ResizeMode="CanResizeWithGrip">
     
     
     <Window.Resources>

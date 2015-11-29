@@ -14,15 +14,18 @@ namespace RepzScreenshot.ViewModel
     class ServerViewModel : WorkspaceViewModel, IDisposable
     {
 
-        Timer RefreshTimer = new Timer(5000);
-        private bool autoRefresh = true;
-
 
         #region Properties
 
         public Server Server { get; private set; }
 
-        private ServerDataAccess ServerDataAccess { get; set; }
+        public ServerDataAccess ServerDataAccess { get; private set; }
+
+        private PlayerListViewModel PlayerListVM { get; set; }
+
+        public ObservableCollection<WorkspaceViewModel> Tabs { get; private set; }
+
+        public int SelectedTabIndex { get; set; }
 
         public override string Title
         {
@@ -114,21 +117,7 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
-        public bool AutoRefresh
-        {
-            get
-            {
-                return autoRefresh;
-            }
-            set
-            {
-                if(autoRefresh != value)
-                {
-                    autoRefresh = value;
-                    NotifyPropertyChanged("AutoRefresh");
-                }
-            }
-        }
+        
 
 
         public ObservableCollection<PlayerViewModel> Players { get; private set; }
@@ -139,9 +128,7 @@ namespace RepzScreenshot.ViewModel
 
         #region Commands
         public Command OpenCommand { get; private set; }
-        public Command RefreshCommand { get; private set; }
-        public Command GetAllCommand { get; private set; }
-
+        
         #endregion //Commands
 
 
@@ -153,15 +140,18 @@ namespace RepzScreenshot.ViewModel
             Server.PropertyChanged += Server_PropertyChanged;
 
             ServerDataAccess = new ServerDataAccess(Server);
+            PlayerListVM = new PlayerListViewModel(this);
+
+            Tabs = new ObservableCollection<WorkspaceViewModel>();
+            Tabs.Add(PlayerListVM);
+           
 
             OpenCommand = new Command(CmdOpen, CanOpen);
-            RefreshCommand = new Command(CmdRefresh, CanRefresh);
-            GetAllCommand = new Command(CmdGetAll, CanGetAll);
+            
 
             Players = new ObservableCollection<PlayerViewModel>();
 
-            RefreshTimer.Elapsed += RefreshTimer_Elapsed;
-            RefreshTimer.AutoReset = false;
+            
         }
 
 
@@ -177,37 +167,12 @@ namespace RepzScreenshot.ViewModel
         private void CmdOpen()
         {
             MainWindowViewModel.AddWorkspace(this);
+            this.OnOpen();
             this.RequestClose += ServerViewModel_RequestClose;
-            this.PropertyChanged += ServerViewModel_PropertyChanged;
             OpenCommand.NotifyCanExecuteChanged();
-            UpdatePlayers();
-            RefreshTimer.Start();
         }
 
-        private bool CanRefresh()
-        {
-            return !IsLoading;
-        }
-
-        private void CmdRefresh()
-        {
-            UpdatePlayers();
-        }
-
-        private bool CanGetAll()
-        {
-            return Players.Any(x => x.Screenshot == null && !MainWindowViewModel.Workspaces.Contains(x) && x.Error == null);
-
-        }
-
-        private void CmdGetAll()
-        {
-            List<PlayerViewModel> toDo = Players.Where(x => x.Screenshot == null && !MainWindowViewModel.Workspaces.Contains(x) && x.Error == null).ToList();
-            foreach(PlayerViewModel p in toDo)
-            {
-                p.Open();
-            }
-        }
+        
        
         #endregion //command methods
 
@@ -215,70 +180,27 @@ namespace RepzScreenshot.ViewModel
         #region methods
 
 
-        private async void UpdatePlayers()
-        {
+        
 
-            IsLoading = true;
-            try
-            {
-                await ServerDataAccess.UpdateCollection<PlayerViewModel, Player>(Players, ServerDataAccess.GetPlayersAsync, x => x.Player, Add, true);
-
-            }
-            catch (ExceptionBase ex)
-            {
-                SetError(ex, UpdatePlayers);
-
-            }
-            catch (Exception ex)
-            {
-                SetError(new Exception("Unknown error"), UpdatePlayers);
-                throw ex;
-            }
-            finally
-            {
-                IsLoading = false;
-                GetAllCommand.NotifyCanExecuteChanged();
-            }
-        }
-
-        private void Add(Player p)
-        {
-            Players.Add(RepzDataAccess.GetPlayerVM(p));
-        }
+        
 
         public void Dispose()
         {
-            RefreshTimer.Dispose();
-            RefreshTimer = null;
+            PlayerListVM.Dispose();
         }
 
-        private void AutoRefreshChanged()
-        {
-            RefreshTimer.Enabled = AutoRefresh;
-        }
 
         #endregion //methods
 
 
         #region event handler methods
 
-        void RefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-
-            App.Current.Dispatcher.Invoke((Action)delegate
-            {
-                UpdatePlayers();
-                if(Error == null && AutoRefresh)
-                    RefreshTimer.Start();
-            });
-
-        }
+        
 
         void ServerViewModel_RequestClose(object sender, EventArgs e)
         {
             OpenCommand.NotifyCanExecuteChanged();
             this.RequestClose -= ServerViewModel_RequestClose;
-            RefreshTimer.Stop();
         }
 
         void Server_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -310,26 +232,7 @@ namespace RepzScreenshot.ViewModel
                 NotifyPropertyChanged(property);
         }
 
-
-        private void ServerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch(e.PropertyName)
-            {
-                case "Error":
-                    if(Error == null && !RefreshTimer.Enabled && AutoRefresh)
-                        RefreshTimer.Start();
-                    break;
-                case "IsLoading":
-                    RefreshCommand.NotifyCanExecuteChanged();
-                    break;
-                case "AutoRefresh":
-                    AutoRefreshChanged();
-                    break;
-                    
-            }
-        }
-
-
+       
         #endregion //event handler methods
 
 

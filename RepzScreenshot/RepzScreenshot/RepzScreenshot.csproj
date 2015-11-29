@@ -127,6 +127,7 @@
     <Compile Include="ViewModel\Command.cs" />
     <Compile Include="ViewModel\ErrorViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\PlayerListViewModel.cs" />
     <Compile Include="ViewModel\PlayerSearchViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\ReportListViewModel.cs" />
@@ -152,6 +153,9 @@
     </Compile>
     <Compile Include="View\PlayerListView.xaml.cs">
       <DependentUpon>PlayerListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServerView.xaml.cs">
+      <DependentUpon>ServerView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -190,6 +194,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\PlayerListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ServerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,7 +14,7 @@
     <DataTemplate DataType="{x:Type vm:ServerViewModel}">
         <DockPanel>
             <view:ErrorView DockPanel.Dock="Top"/>
-            <view:PlayerListView />
+            <view:ServerView />
         </DockPanel>
         
     </DataTemplate>

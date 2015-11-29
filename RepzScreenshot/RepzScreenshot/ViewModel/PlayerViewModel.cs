@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace RepzScreenshot.ViewModel
 {
@@ -235,7 +236,7 @@ namespace RepzScreenshot.ViewModel
                 else if (IsLoading)
                     return Brushes.Yellow;
                 else if (Screenshot is BitmapImage)
-                    return MainWindowViewModel.Workspaces.Contains(this) ? Brushes.Green : Brushes.LightGreen;
+                    return MainWindowViewModel.Workspaces.Any(x => x == this || x is ServerViewModel && ((ServerViewModel)x).Tabs.Contains(this)) ? Brushes.Green : Brushes.LightGreen;
                 
                 else
                     return null;
@@ -247,7 +248,6 @@ namespace RepzScreenshot.ViewModel
 
         #region Commands
 
-        public Command ScreenshotCommand { get; protected set; }
         public Command ReloadCommand { get; protected set; }
         public Command SaveImageCommand { get; protected set; }
 
@@ -258,7 +258,6 @@ namespace RepzScreenshot.ViewModel
 
         private void InitCommands()
         {
-            ScreenshotCommand = new Command(CmdGetScreenshot, CanGetScreenshot);
             ReloadCommand = new Command(CmdReload, CanReload);
             SaveImageCommand = new Command(CmdSaveImage, CanSaveImage);
             UploadImageCommand = new Command(CmdUploadImage, CanUploadImage);
@@ -275,10 +274,12 @@ namespace RepzScreenshot.ViewModel
 
             Player.PropertyChanged += Player_PropertyChanged;
             this.PropertyChanged += PlayerViewModel_PropertyChanged;
+            this.OpenWorkspace += PlayerViewModel_OpenWorkspace;
             InitCommands();
 
             Report = new ReportViewModel(this);
         }
+
 
         static PlayerViewModel()
         {
@@ -401,11 +402,9 @@ namespace RepzScreenshot.ViewModel
 
         public void Open()
         {
-            MainWindowViewModel.AddWorkspace(this);
             NotifyPropertyChanged("StatusBrush");
             this.RequestClose += PlayerViewModel_RequestClose;
-            ScreenshotCommand.NotifyCanExecuteChanged();
-
+            
             if (Screenshot == null && Error == null)
                 GetScreenshot();
         }
@@ -529,8 +528,12 @@ namespace RepzScreenshot.ViewModel
 
         void PlayerViewModel_RequestClose(object sender, EventArgs e)
         {
-            ScreenshotCommand.NotifyCanExecuteChanged();
             NotifyPropertyChanged("StatusBrush");
+        }
+
+        void PlayerViewModel_OpenWorkspace(object sender, EventArgs e)
+        {
+            Open();
         }
 
         void Player_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
