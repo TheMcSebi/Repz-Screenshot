@@ -32,6 +32,9 @@ namespace RepzScreenshot.ViewModel
 
         public Command RemoveReportCommand { get; private set; }
 
+        public Command CopyReportMDCommand { get; private set; }
+        
+
         public Command RemoveAllCommand { get; private set; }
 
         #endregion //commands
@@ -43,6 +46,7 @@ namespace RepzScreenshot.ViewModel
             Reports = new ObservableCollection<ReportViewModel>();
 
             CopyReportCommand = new Command(CmdCopyReport);
+            CopyReportMDCommand = new Command(CmdCopyReportMD);
             RemoveReportCommand = new ParameterCommand<ReportViewModel>(CmdRemoveReport);
             RemoveAllCommand = new Command(CmdRemoveAll);
         }
@@ -98,6 +102,37 @@ namespace RepzScreenshot.ViewModel
                 
             }
             
+            Clipboard.SetText(text);
+        }
+
+        private void CmdCopyReportMD()
+        {
+            string text = String.Empty;
+
+            foreach (ReportViewModel report in Reports)
+            {
+                string profileUrl = "https://repziw4.de/forum/memberlist.php?mode=viewprofile&u=" + report.PlayerViewModel.PlayerId;
+                string name = report.PlayerViewModel.PlayerName;
+                string server = report.PlayerViewModel.ServerHostname;
+                string date = report.PlayerViewModel.ScreenshotDate.Value.ToString("yyyy-MM-dd HH:mm");
+                string reason = report.ReportReason;
+
+                string proof = String.Empty;
+                foreach (string url in report.ImageUrls)
+                {
+                    proof += String.Format("![Proof]({0}.jpg)\n", url);
+                }
+
+                text += String.Format(
+                    "**Name:** [{1}]({0})\n" +
+                    "**Server:** {2}\n" +
+                    "**Date:** {3}\n" +
+                    "**Reason:** {4}\n" +
+                    "**Proof:**\n{5}\n",
+                    profileUrl, name, server, date, reason, proof);
+
+            }
+
             Clipboard.SetText(text);
         }
 

@@ -10,7 +10,8 @@
 
         <DockPanel DockPanel.Dock="Top" Margin="10" HorizontalAlignment="Left">
             <TextBlock DockPanel.Dock="Left" Text="Copy forum-ready report to clipboard: "/>
-            <Button DockPanel.Dock="Left" Content="Copy" Width="100" Height="20" Command="{Binding CopyReportCommand}" Margin="5,0,0,0"/>
+            <Button DockPanel.Dock="Left" Content="Copy BBCode" Width="100" Height="20" Command="{Binding CopyReportCommand}" Margin="5,0,0,0"/>
+            <Button DockPanel.Dock="Left" Content="Copy Markdown" Width="100" Height="20" Command="{Binding CopyReportMDCommand}" Margin="5,0,0,0"/>
             <Button DockPanel.Dock="Left" Content="Remove All" Width="100" Height="20" Command="{Binding RemoveAllCommand}" Margin="10,0,0,0"/>
         </DockPanel>
         
