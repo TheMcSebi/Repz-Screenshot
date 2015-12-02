@@ -8,6 +8,9 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Timers;
 using System.Linq;
+using System.Windows.Media;
+using System.Collections.Specialized;
+using System.Windows.Media.Imaging;
 
 namespace RepzScreenshot.ViewModel
 {
@@ -117,7 +120,25 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
-        
+        public Brush StatusBrush
+        {
+            get
+            {
+                if (Error != null || Tabs.Any(x => x.Error != null))
+                    return Brushes.Red;
+
+                else if (Players.Count == 0)
+                    return null;
+
+                else if (Players.Any(x => x.IsLoading))
+                    return Brushes.Yellow;
+
+                else if (Players.All(x => x.Screenshot != null))
+                    return Brushes.Green;
+
+                return null;
+            }
+        }
 
 
         public ObservableCollection<PlayerViewModel> Players { get; private set; }
@@ -143,16 +164,19 @@ namespace RepzScreenshot.ViewModel
             PlayerListVM = new PlayerListViewModel(this);
 
             Tabs = new ObservableCollection<WorkspaceViewModel>();
+            Tabs.CollectionChanged += Tabs_CollectionChanged;
             Tabs.Add(PlayerListVM);
-           
 
             OpenCommand = new Command(CmdOpen, CanOpen);
             
 
             Players = new ObservableCollection<PlayerViewModel>();
+            Players.CollectionChanged += Players_CollectionChanged;
 
+            this.PropertyChanged += ServerViewModel_PropertyChanged;
             
         }
+
 
 
         #endregion //constructor
@@ -195,7 +219,17 @@ namespace RepzScreenshot.ViewModel
 
         #region event handler methods
 
-        
+
+        private void ServerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "Error":
+                    NotifyPropertyChanged("StatusBrush");
+                    break;
+            }
+        }
+
 
         void ServerViewModel_RequestClose(object sender, EventArgs e)
         {
@@ -232,7 +266,70 @@ namespace RepzScreenshot.ViewModel
                 NotifyPropertyChanged(property);
         }
 
-       
+        void Players_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            NotifyPropertyChanged("StatusBrush");
+
+            if (e.OldItems != null)
+            {
+                foreach (PlayerViewModel pvm in e.OldItems)
+                {
+                    pvm.PropertyChanged -= PlayerViewModel_PropertyChanged;
+                }
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (PlayerViewModel pvm in e.NewItems)
+                {
+                    pvm.PropertyChanged += PlayerViewModel_PropertyChanged;
+                }
+            }
+        }
+
+        private void PlayerViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "Screenshot":
+                case "IsLoading":
+                    NotifyPropertyChanged("StatusBrush");
+                    break;
+            }
+        }
+
+        private void Tabs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            NotifyPropertyChanged("StatusBrush");
+
+            if (e.OldItems != null)
+            {
+                foreach (WorkspaceViewModel wvm in e.OldItems)
+                {
+                    wvm.PropertyChanged -= WorkspaceViewModel_PropertyChanged;
+                }
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (WorkspaceViewModel wvm in e.NewItems)
+                {
+                    wvm.PropertyChanged += WorkspaceViewModel_PropertyChanged;
+                }
+            }
+        }
+
+        private void WorkspaceViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Error":
+                    NotifyPropertyChanged("StatusBrush");
+                    break;
+            }
+        }
+
+        
         #endregion //event handler methods
 
 
