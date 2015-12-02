@@ -99,8 +99,8 @@ namespace RepzScreenshot.ViewModel
         private void CmdOpenPlayer(PlayerViewModel pvm)
         {
             ServerVM.Tabs.Add(pvm);
+            pvm.RequestClose += PlayerViewModel_RequestClose;
             pvm.OnOpen();
-            pvm.RequestClose +=PlayerViewModel_RequestClose;
             OpenPlayerCommand.NotifyCanExecuteChanged();
         }
 
