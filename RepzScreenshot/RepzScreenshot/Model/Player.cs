@@ -12,6 +12,7 @@ namespace RepzScreenshot.Model
         private string hostname;
         private string game;
         private string country;
+        private bool screenshotTaken;
 
 
         #region properties
@@ -123,6 +124,22 @@ namespace RepzScreenshot.Model
                 {
                     country = value;
                     NotifyPropertyChanged("Country");
+                }
+            }
+        }
+
+        public bool ScreenshotTaken 
+        {
+            get
+            {
+                return screenshotTaken;
+            }
+            set
+            {
+                if(screenshotTaken != value)
+                {
+                    screenshotTaken = value;
+                    NotifyPropertyChanged("ScreenshotTaken");
                 }
             }
         }

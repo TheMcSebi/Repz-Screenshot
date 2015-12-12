@@ -133,7 +133,7 @@ namespace RepzScreenshot.ViewModel
                 else if (Players.Any(x => x.IsLoading))
                     return Brushes.Yellow;
 
-                else if (Players.All(x => x.Screenshot != null))
+                else if (Players.All(x => x.ScreenshotTaken))
                     return Brushes.Green;
 
                 return null;
@@ -235,6 +235,12 @@ namespace RepzScreenshot.ViewModel
         {
             OpenCommand.NotifyCanExecuteChanged();
             this.RequestClose -= ServerViewModel_RequestClose;
+            
+            foreach (PlayerViewModel pvm in Players)
+            {
+                pvm.CloseCommand.Execute(null);
+            }
+            Players.Clear();
         }
 
         void Server_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -127,6 +127,21 @@ namespace RepzScreenshot.ViewModel
             }
         }
 
+        public bool ScreenshotTaken
+        {
+            get
+            {
+                return Player.ScreenshotTaken;
+            }
+            private set
+            {
+                if(Player.ScreenshotTaken != value)
+                {
+                    Player.ScreenshotTaken = value;
+                }
+            }
+        }
+
         public bool DrawUserInfo
         {
             get
@@ -235,7 +250,7 @@ namespace RepzScreenshot.ViewModel
                     return Brushes.Red;
                 else if (IsLoading)
                     return Brushes.Yellow;
-                else if (Screenshot is BitmapImage)
+                else if (ScreenshotTaken)
                     return MainWindowViewModel.Workspaces.Any(x => x == this || x is ServerViewModel && ((ServerViewModel)x).Tabs.Contains(this)) ? Brushes.Green : Brushes.LightGreen;
                 
                 else
@@ -425,6 +440,7 @@ namespace RepzScreenshot.ViewModel
                 Screenshot = await RepzDataAccess.GetScreenshotAsync(Player);
                 ScreenshotDate = DateTime.Now;
                 IsScreenUploaded = false;
+                ScreenshotTaken = true;
             }
             catch (ExceptionBase ex)
             {
@@ -522,6 +538,14 @@ namespace RepzScreenshot.ViewModel
                 case "Screenshot":
                     SaveImageCommand.NotifyCanExecuteChanged();
                     UploadImageCommand.NotifyCanExecuteChanged();
+                    if (screenshot == null)
+                    {
+                        infoScreenshot = null;
+                        GC.Collect();
+                    }
+                    break;
+                case "ScreenshotTaken":
+                    NotifyPropertyChanged("StatusBrush");
                     break;
             }
         }
@@ -529,6 +553,7 @@ namespace RepzScreenshot.ViewModel
         void PlayerViewModel_RequestClose(object sender, EventArgs e)
         {
             NotifyPropertyChanged("StatusBrush");
+            Screenshot = null;
         }
 
         void PlayerViewModel_OpenWorkspace(object sender, EventArgs e)
@@ -561,6 +586,9 @@ namespace RepzScreenshot.ViewModel
                     break;
                 case "Country":
                     property = "PlayerCountry";
+                    break;
+                case "ScreenshotTaken":
+                    property = "ScreenshotTaken";
                     break;
                     
             }

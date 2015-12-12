@@ -116,13 +116,13 @@ namespace RepzScreenshot.ViewModel
 
         private bool CanGetAll()
         {
-            return Players.Any(x => x.Screenshot == null && !ServerVM.Tabs.Contains(x) && x.Error == null);
+            return Players.Any(x => !x.ScreenshotTaken && !ServerVM.Tabs.Contains(x) && x.Error == null);
 
         }
 
         private void CmdGetAll()
         {
-            List<PlayerViewModel> toDo = Players.Where(x => x.Screenshot == null && !ServerVM.Tabs.Contains(x) && x.Error == null).ToList();
+            List<PlayerViewModel> toDo = Players.Where(x => !x.ScreenshotTaken && !ServerVM.Tabs.Contains(x) && x.Error == null).ToList();
             foreach (PlayerViewModel p in toDo)
             {
                 ServerVM.Tabs.Add(p);
