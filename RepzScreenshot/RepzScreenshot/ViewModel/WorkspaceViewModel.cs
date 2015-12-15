@@ -15,6 +15,8 @@ namespace RepzScreenshot.ViewModel
 
         public bool IsClosable { get; protected set; }
 
+        public bool IsOpen { get; protected set; }
+
         public ErrorViewModel Error
         {
             get
@@ -43,10 +45,11 @@ namespace RepzScreenshot.ViewModel
             IsClosable = closable;
 
             this.PropertyChanged += WorkspaceViewModel_PropertyChanged;
+            this.OpenWorkspace += WorkspaceViewModel_OpenWorkspace;
+            this.RequestClose += WorkspaceViewModel_RequestClose;
         }
 
         
-
         private bool CanClose()
         {
             return IsClosable;
@@ -111,6 +114,16 @@ namespace RepzScreenshot.ViewModel
                     RemoveError();
                 }
             }
+        }
+
+        private void WorkspaceViewModel_RequestClose(object sender, EventArgs e)
+        {
+            IsOpen = false;
+        }
+
+        private void WorkspaceViewModel_OpenWorkspace(object sender, EventArgs e)
+        {
+            IsOpen = true;
         }
 
         #endregion //event handler methods
