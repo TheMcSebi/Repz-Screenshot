@@ -553,7 +553,8 @@ namespace RepzScreenshot.ViewModel
         void PlayerViewModel_RequestClose(object sender, EventArgs e)
         {
             NotifyPropertyChanged("StatusBrush");
-            Screenshot = null;
+            if(!ReportListViewModel.Reports.Contains(Report))
+                Screenshot = null;
         }
 
         void PlayerViewModel_OpenWorkspace(object sender, EventArgs e)

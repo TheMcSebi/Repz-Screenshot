@@ -67,6 +67,10 @@ namespace RepzScreenshot.ViewModel
         public void RemoveReport(ReportViewModel report)
         {
             Reports.Remove(report);
+            if(!report.PlayerViewModel.IsOpen)
+            {
+                report.PlayerViewModel.Screenshot = null;
+            }
         }
 
         #endregion
@@ -143,7 +147,10 @@ namespace RepzScreenshot.ViewModel
 
         private void CmdRemoveAll()
         {
-            Reports.Clear();
+            foreach(ReportViewModel report in Reports)
+            {
+                RemoveReport(report);
+            }
         }
 
         #endregion //command methods
