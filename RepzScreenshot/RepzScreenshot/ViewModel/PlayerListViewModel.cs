@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Media;
 
 namespace RepzScreenshot.ViewModel
 {
@@ -50,6 +51,14 @@ namespace RepzScreenshot.ViewModel
                     autoRefresh = value;
                     NotifyPropertyChanged("AutoRefresh");
                 }
+            }
+        }
+
+        public Brush StatusBrush
+        {
+            get
+            {
+                return (Error is ErrorViewModel ? Brushes.Red : null);
             }
         }
 
@@ -224,6 +233,7 @@ namespace RepzScreenshot.ViewModel
                 case "Error":
                     if (Error == null && !RefreshTimer.Enabled && AutoRefresh)
                         RefreshTimer.Start();
+                    NotifyPropertyChanged("StatusBrush");
                     break;
                 case "IsLoading":
                     RefreshCommand.NotifyCanExecuteChanged();
