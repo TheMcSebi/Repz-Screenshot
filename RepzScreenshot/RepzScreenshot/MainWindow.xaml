@@ -4,7 +4,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:view="clr-namespace:RepzScreenshot.View"
 xmlns:vm="clr-namespace:RepzScreenshot.ViewModel"
 xmlns:local="clr-namespace:RepzScreenshot"
-Title="Repz Screenshot" Height="600" Width="1000" MinHeight="600" MinWidth="1000" ResizeMode="CanResizeWithGrip">
+Title="Repz Screenshot" Height="700" Width="1000" MinHeight="700" MinWidth="1000" ResizeMode="CanResizeWithGrip">
     
     
     <Window.Resources>
@@ -16,10 +16,9 @@ Title="Repz Screenshot" Height="600" Width="1000" MinHeight="600" MinWidth="1000
         <vm:MainWindowViewModel />
     </Window.DataContext>
 
-    <Grid Margin="5">
+    <Grid Margin="0, 5, 0, 0">
         
-        <TabControl DockPanel.Dock="Top"
-        ItemsSource="{Binding Workspaces}" Grid.ColumnSpan="3" Margin="0" >
+        <TabControl  ItemsSource="{Binding Workspaces}" Grid.Row="0" Margin="0,0,0,20" >
 
             <TabControl.ItemTemplate>
                 
