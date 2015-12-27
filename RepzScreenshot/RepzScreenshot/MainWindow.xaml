@@ -52,7 +52,23 @@ Title="Repz Screenshot" Height="700" Width="1000" MinHeight="700" MinWidth="1000
             </TabControl.ItemTemplate>
             
         </TabControl>
-        
+
+      <Grid Margin="15,2,15,2" VerticalAlignment="Bottom" >
+
+        <TextBlock HorizontalAlignment="Left">
+          <Hyperlink CommandParameter="http://www.repz.eu/forum/memberlist.php?mode=viewprofile&amp;u=46147" Command="{Binding HyperlinkCommand}">
+            by tccr
+          </Hyperlink>
+        </TextBlock>
+
+        <TextBlock HorizontalAlignment="Right">
+          <Hyperlink CommandParameter="https://imgur.com/a/FeWRL/" Command="{Binding HyperlinkCommand}">
+            Imgur Album
+          </Hyperlink>
+        </TextBlock>
+
+      </Grid>
+      
     </Grid>
     
 </Window>

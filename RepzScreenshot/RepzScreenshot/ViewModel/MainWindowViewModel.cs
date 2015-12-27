@@ -8,7 +8,9 @@ namespace RepzScreenshot.ViewModel
     {
 
         public static ObservableCollection<WorkspaceViewModel> Workspaces { get; private set; }
-        
+
+        public Command HyperlinkCommand {get; private set; }
+
         public MainWindowViewModel()
         {
             Workspaces = new ObservableCollection<WorkspaceViewModel>();
@@ -21,6 +23,7 @@ namespace RepzScreenshot.ViewModel
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
+            HyperlinkCommand = new ParameterCommand<string>(CmdHyperlink);
         }
         
 
@@ -37,6 +40,12 @@ namespace RepzScreenshot.ViewModel
 
             ws.RequestClose += Workspace_RequestClose;
             Workspaces.Add(ws);
+        }
+
+
+        private void CmdHyperlink(string url)
+        {
+            System.Diagnostics.Process.Start(url);
         }
         
         #region event handler methods
